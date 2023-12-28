@@ -14,7 +14,7 @@ Usage
 To generate a changelog, use the generateChangelog function from parseCommit.js.
 
 License
-This project is licensed under the terms of the LICENSE file.
+This project is licensed under the terms of the [LICENSE](./LICENSE) file.
 
 Contributing
 Contributions are welcome. Please make sure your commits follow the Conventional Commits standard.
