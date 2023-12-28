@@ -1,13 +1,12 @@
 {
-  "name": "y",
+  "name": "generate-markdown-from-commits",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generating markdown from commits",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gagik",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "conventional-commits-parser": "^5.0.0",
     "simple-git": "^3.21.0"
