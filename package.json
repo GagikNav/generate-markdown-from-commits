@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Generating markdown from commits",
   "main": "index.js",
-  "scripts": {},
+    "scripts": {
+      "build": "ncc build index.ts -o dist"
+    },
   "author": "Gagik",
   "license": "MIT",
   "dependencies": {
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
+    "@vercel/ncc": "^0.38.1",
     "typescript": "^5.3.3"
   }
 }
