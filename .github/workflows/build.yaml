@@ -1,6 +1,4 @@
 name: Build on push
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 on: [push]
 
 jobs:
@@ -10,6 +8,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
