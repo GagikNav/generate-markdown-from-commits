@@ -2,6 +2,7 @@ const simpleGit = require('simple-git')
 const fs = require('fs')
 const parser = require('conventional-commits-parser')
 
+
 const repoPath = './' // Replace with the path to your Git repository
 
 // Check if the repository exists
@@ -9,6 +10,7 @@ if (!fs.existsSync(repoPath)) {
   console.error('The specified repository does not exist.')
   process.exit(1)
 }
+// @ts-ignore
 const git = simpleGit(repoPath)
 git.log({ from: 'dev', to: 'updating-documents' }, (err, log) => {
   if (err) {
