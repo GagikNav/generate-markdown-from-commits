@@ -4,7 +4,7 @@
   "description": "Generating markdown from commits",
   "main": "index.js",
     "scripts": {
-      "build": "ncc build index.ts -o dist"
+      "build": "ncc build index.ts -o lib"
     },
   "author": "Gagik",
   "license": "MIT",
