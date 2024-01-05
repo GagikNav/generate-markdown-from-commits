@@ -1,6 +1,5 @@
 name: 'Generate Changelog'
 description: 'Generate a changelog based on conventional commits'
-
 outputs:
   changelog:
     description: 'The generated changelog'
