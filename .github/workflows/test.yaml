@@ -19,7 +19,7 @@ jobs:
       run: npm ci
 
     - name: Run action
-      uses: "GagikNav/generate-markdown-from-commits@v1.0.0"
+      uses: GagikNav/generate-markdown-from-commits@main
       id: myaction
 
 
