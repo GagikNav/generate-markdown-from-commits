@@ -1,0 +1,12 @@
+name: 'Generate Changelog'
+description: 'Generate a changelog based on conventional commits'
+inputs:
+  repoPath:
+    description: 'Path to the Git repository'
+    required: true
+outputs:
+  changelog:
+    description: 'The generated changelog'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

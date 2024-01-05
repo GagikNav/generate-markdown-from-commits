@@ -1,86 +1,77 @@
-const simpleGit = require('simple-git')
-const fs = require('fs')
-const parser = require('conventional-commits-parser')
-
-
-const repoPath = './' // Replace with the path to your Git repository
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+var simple_git_1 = __importDefault(require("simple-git"));
+var fs_1 = __importDefault(require("fs"));
+var core = __importStar(require("@actions/core"));
+var github = __importStar(require("@actions/github"));
+var process_1 = __importDefault(require("process"));
+var generateChangelog_1 = require("./generateChangelog");
+var repoPath = './'; // Replace with the path to your Git repository
+// Get the current branch from the GITHUB_REF environment variable
+var currentBranch = process_1.default.env.GITHUB_REF;
+// Get the default branch from the github context
+var defaultBranch = (_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.default_branch;
+var changelog = '';
+// Check if the current branch exists
+if (currentBranch) {
+    currentBranch = currentBranch.replace('refs/heads/', '');
+}
+else {
+    core.setFailed('Could not determine the current branch');
+}
+if (!defaultBranch) {
+    core.setFailed('Could not determine the default branch');
+}
 // Check if the repository exists
-if (!fs.existsSync(repoPath)) {
-  console.error('The specified repository does not exist.')
-  process.exit(1)
+if (!fs_1.default.existsSync(repoPath)) {
+    core.setFailed('Repository does not exist');
+}
+// Get the default branch from the github context
+if (!defaultBranch) {
+    core.setFailed('Could not determine the default branch');
+}
+// Check if the repository exists
+if (!fs_1.default.existsSync(repoPath)) {
+    console.error('The specified repository does not exist.');
+    process_1.default.exit(1);
 }
 // @ts-ignore
-const git = simpleGit(repoPath)
-git.log({ from: 'dev', to: 'updating-documents' }, (err, log) => {
-  if (err) {
-    console.error(err)
-    return
-  }
-
-  const commits = log.all
-  // Process commits and generate Markdown
-  const changelog = generateChangelog(commits)
-  fs.writeFileSync('CHANGELOG.md', changelog)
-})
-function generateChangelog(commits) {
-  // Parse commits using conventional-commits-parser
-  const parsedCommits = commits.map((commit) => parser.sync(commit.message))
-
-  // Organize commits by type in an object
-  const organizedCommits = parsedCommits.reduce(
-    (accumulator, currentValue, index, commitsArr) => {
-      accumulator = {
-        ...accumulator,
-        [currentValue.type]: commitsArr.filter((commit) => commit.type === currentValue.type),
-      }
-      return accumulator
-    },
-
-    {},
-  )
-  // Generate Markdown for each commit type
-  const commitTypes = Object.keys(organizedCommits)
-  
-  // sorting commitTypes the way that null is last one
-  commitTypes.sort((a, b) => {
-    if (a === 'null') {
-      return 1
-    } else if (b === 'null') {
-      return -1
-    } else {
-      return 0
+var git = (0, simple_git_1.default)(repoPath);
+git.log({ from: defaultBranch, to: currentBranch }, function (err, log) {
+    if (err) {
+        console.error(err);
+        return;
     }
-  })
-
-  commitTypes.forEach((type) => {
-    organizedCommits[type] = organizedCommits[type].map((commit) => {
-      return `- ${type === 'null' ? commit.header : commit.subject} ${
-        commit?.scope ? `(${commit.scope})` : ''
-      } `
-    })
-  })
-
-  const typesMap = {
-    feat: 'Features',
-    fix: 'Bug Fixes',
-    docs: 'Documentation',
-    style: 'Styles',
-    refactor: 'Code Refactoring',
-    perf: 'Performance Improvements',
-    test: 'Tests',
-    build: 'Build System',
-    ci: 'Continuous Integration',
-    chore: 'Chores',
-    revert: 'Reverts',
-    null: 'Other',
-  }
-
-  let changelog = ''
-  commitTypes.forEach((type) => {
-    changelog += `### ${typesMap[type] ?? type}\n`
-    changelog += `${organizedCommits[type].join('\n')}\n\n`
-  })
-
-  return `## Changelog\n\n${changelog}`
-}
+    var commits = log.all;
+    // Process commits and generate Markdown
+    changelog = (0, generateChangelog_1.generateChangelog)(commits);
+});
+// Set the CHANGELOG environment variable
+core.exportVariable('CHANGELOG', changelog);
