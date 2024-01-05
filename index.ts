@@ -44,6 +44,7 @@ async function run() {
 	const log = await git.log({
 			from: defaultBranch,
 			to: currentBranch,
+			splitOn: '..', // Split on two dots
 			format: {
 					hash: '%H',
 					date: '%aI',
